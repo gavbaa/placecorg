@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    width: 700px;
+    margin: 0 auto;
+}
+
+#header {
+    width: 100%;
+    background-color: green;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+}
+
+h1 span {
+    background-color: pink;
+    font-style: italic;
+}
+
+#content {
+    margin: 1em 0;
+}
+
+.code {
+    background-color: green;
+    border: 3px solid pink;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    font-size: 24px;
+    color: white;
+    width: auto;
+    padding: 0.5em;
+    margin: 1em 0;
+    text-align: center;
+}
+
+.code a {
+    color: white;
+}

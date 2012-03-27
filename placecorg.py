@@ -48,9 +48,9 @@ def index():
 def img(width=0, height=0):
     print width, height
     try:
-        im = Image.open(ROOT_DIR + '/static/ph/450x365.jpg')
+        im = Image.open(ROOT_DIR + '/static/ph/220x220.jpg')
         ar = float(im.size[0]) / im.size[1]
-        print 'ar', ar
+        #print 'ar', ar
 
         if not height:
             height = int(width / ar)
@@ -92,22 +92,25 @@ def imgar(width, height):
             pass
 
     img_ars.sort()
+    print img_ars
     ar = float(width) / height
 
     # Find the nearest aspect ratio.
     ix = 0
     while ix < len(img_ars) - 1:
-        if img_ars[ix] > ar:
+        if ar - img_ars[ix] <= 0.01:
             break
         ix += 1
+
+    #print ar, ix
+
     if ix == 0:
         pass
-    elif ix >= len(img_ars) - 1:
-        pass
     else:
-        ar_center = img_ars[ix] + (img_ars[ix + 1] - img_ars[ix]) / 2
-        if ar > ar_center:
-            ix += 1
+        ar_center = img_ars[ix] - (img_ars[ix] - img_ars[ix - 1]) / 2
+        #print ar_center
+        if ar < ar_center:
+            ix -= 1
 
     im = img_by_ars[img_ars[ix]]
 
