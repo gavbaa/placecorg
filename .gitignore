@@ -1,0 +1,5 @@
+.idea
+*.pyc
+settings.py
+atlassian-ide-plugin.xml
+bootstrap.built.js
