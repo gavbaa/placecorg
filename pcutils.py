@@ -1,7 +1,20 @@
 from flask.helpers import make_response
 import glob
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 import StringIO
+
+def additional_image_mangling(im, get):
+    if get.get('g', False):
+        im = ImageOps.grayscale(im)
+    if get.get('d', False):
+        # Stamp the image dimensions on
+        f = ImageFont.load_default()
+        d = ImageDraw.Draw(im)
+        im_dims = '(%s,%s)' % (im.size[0], im.size[1])
+        text_size = d.textsize(im_dims)
+        d.rectangle((im.size[0] - text_size[0], im.size[1] - text_size[1], im.size[0], im.size[1]), fill=(255, 255, 255))
+        d.text((im.size[0] - text_size[0], im.size[1] - text_size[1]), im_dims,  font=f, fill=(0, 0, 0))
+    return im
 
 def simple_resize(width, height, path):
     im = Image.open(path)
@@ -78,6 +91,14 @@ def super_fit(width, height, dir):
     im = im.crop((left, top, left + width, top + height))
     return im
 
+def get_extension_response(im, ext=''):
+    if ext == 'png':
+        return get_png_response(im)
+    elif ext == 'jpg' or ext == 'jpeg' or ext == '':
+        return get_jpeg_response(im)
+    raise Exception('Unrecognized extension given: ' + ext)
+
+
 def get_jpeg_response(im):
     """ Given an image object, create a Flask response with the appropriate headers. """
     # Spit it out.
@@ -87,4 +108,15 @@ def get_jpeg_response(im):
     buf.close()
     response = make_response(jpeg)
     response.headers['Content-Type'] = 'image/jpeg'
+    return response
+
+def get_png_response(im):
+    """ Given an image object, create a Flask response with the appropriate headers. """
+    # Spit it out.
+    buf = StringIO.StringIO()
+    im.save(buf, format= 'PNG')
+    jpeg = buf.getvalue()
+    buf.close()
+    response = make_response(jpeg)
+    response.headers['Content-Type'] = 'image/png'
     return response

@@ -34,28 +34,31 @@ def index():
 @app.route('/<int:width>')
 @app.route('/<int:width>x')
 @app.route('/x<int:height>')
-def img(width=0, height=0):
+@app.route('/<int:width>.<ext>')
+@app.route('/<int:width>x.<ext>')
+@app.route('/x<int:height>.<ext>')
+def img(width=0, height=0, ext=''):
     try:
         im = pcutils.simple_resize(width, height, ROOT_DIR + '/static/' + DEFAULT_GALLERY + '/default.jpg')
-        response = pcutils.get_jpeg_response(im)
+        response = pcutils.get_extension_response(im, ext)
         return response
     except IOError, ioe:
         return make_response('An error occurred.  Sorry.')
 
 @app.route('/<int:width>x<int:height>')
-def imgar(width, height):
-    """ Find the most appropriate aspect ratio corgi, fit it to the new size, and then crop nicely. """
-    im = pcutils.super_fit(width, height, ROOT_DIR + '/static/corgi/*')
-    response = pcutils.get_jpeg_response(im)
-    return response
+@app.route('/<int:width>x<int:height>.<ext>')
+def imgar(width, height, ext=''):
+    return imgar_gallery(DEFAULT_GALLERY, width, height, ext)
 
 @app.route('/<gallery>/<int:width>x<int:height>')
-def imgar_gallery(gallery, width, height):
+@app.route('/<gallery>/<int:width>x<int:height>.<ext>')
+def imgar_gallery(gallery, width, height, ext=''):
     """ Find the most appropriate aspect ratio corgi, fit it to the new size, and then crop nicely. """
     im = pcutils.super_fit(width, height, ROOT_DIR + '/static/' + gallery + '/*')
     if im is None:
         return make_response('An error occurred.  You probably specified an invalid gallery.')
-    response = pcutils.get_jpeg_response(im)
+    im = pcutils.additional_image_mangling(im, request.args)
+    response = pcutils.get_extension_response(im, ext)
     return response
 
 
