@@ -12,8 +12,8 @@ def additional_image_mangling(im, get):
         d = ImageDraw.Draw(im)
         im_dims = '(%s,%s)' % (im.size[0], im.size[1])
         text_size = d.textsize(im_dims)
-        d.rectangle((im.size[0] - text_size[0], im.size[1] - text_size[1], im.size[0], im.size[1]), fill=(255, 255, 255))
-        d.text((im.size[0] - text_size[0], im.size[1] - text_size[1]), im_dims,  font=f, fill=(0, 0, 0))
+        d.rectangle((im.size[0] - text_size[0], im.size[1] - text_size[1], im.size[0], im.size[1]), fill=0xffffff)
+        d.text((im.size[0] - text_size[0], im.size[1] - text_size[1]), im_dims,  font=f, fill=0x000000)
     return im
 
 def simple_resize(width, height, path):
