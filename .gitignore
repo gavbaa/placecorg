@@ -3,3 +3,4 @@
 settings.py
 atlassian-ide-plugin.xml
 bootstrap.built.js
+.DS_Store
